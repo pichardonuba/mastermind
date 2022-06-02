@@ -11,7 +11,6 @@ const playGame = () => {
   const COLORS = ['r','g','b','y','c','m'];
   const COMBINATION_LENGTH = 4;
   const secretCombination = getSecretCombination(COLORS, COMBINATION_LENGTH);
-  console.writeln(secretCombination);
   const maxAttempts = 11;
   let currentAttempt = 0;
   let winner;
