@@ -9,48 +9,41 @@ const playMastermind = () => {
 
 const playGame = () => {
   const COLORS = ['r','g','b','y','c','m'];
-  const secretCombination = getSecretCombination(COLORS);
+  const COMBINATION_LENGTH = 4;
+  const secretCombination = getSecretCombination(COLORS, COMBINATION_LENGTH);
+  console.writeln(secretCombination);
   const maxAttempts = 11;
   let currentAttempt = 0;
   let winner;
   do{
     showBoard(currentAttempt);
-    const proposedCombination = getproposedCombination();
-    const error = validateProposedCombination(proposedCombination, COLORS);
+    const proposedCombination = console.readString();
+    const error = validateProposedCombination(proposedCombination, COLORS, COMBINATION_LENGTH);
+    const resultProposedCombination = getResultProposedCombination(proposedCombination, secretCombination);
+    winner = isWinner(resultProposedCombination) ;
+    showResult(error, proposedCombination, resultProposedCombination);
     if(!error) {
-      const resultProposedCombination = getResultProposedCombination(proposedCombination, secretCombination);
-      winner = isWinner(resultProposedCombination) ;
-      const blacks = 0;
-      const whites = 1;
-      console.writeln(`${proposedCombination} --> ${resultProposedCombination[blacks]} and ${resultProposedCombination[whites]}`);
       currentAttempt += 1;
-    }else {
-      console.writeln(error);
     }
   }
   while(!winner && currentAttempt < maxAttempts);
   showIsWinnerOrLost(winner);
 }
 
-const getSecretCombination = (COLORS) => {
-  const COMBINATION_LENGTH = 4;
+const getSecretCombination = (COLORS, COMBINATION_LENGTH) => {
   const secretCombination = [];
-  let index = 0;
   do{
-    const min = 0;
-    const max = 6;
-    let randomInt = Math.floor(Math.random() * (max - min)) + min;
-    if(!isRepeatSecretCombination(COLORS[randomInt], secretCombination)) {
-      index++;
-      secretCombination[secretCombination.length] = COLORS[randomInt];
+    let randomColor = COLORS[parseInt(Math.random() * 6)];
+    if(!isRepeatSecretCombination(randomColor, secretCombination)) {
+      secretCombination[secretCombination.length] = randomColor;
     }
-  }while(index < COMBINATION_LENGTH);
+  }while(secretCombination.length !== COMBINATION_LENGTH);
   return secretCombination;
 }
 
 const showBoard = (currentAttempt) => {
-  const startGame = 0;
-  if(currentAttempt === startGame) {
+  const firstAttempts = 0;
+  if(currentAttempt === firstAttempts) {
     console.writeln('----- MASTERMIND -----');
   }
   console.writeln(`${currentAttempt} attempt(s):`);
@@ -58,24 +51,7 @@ const showBoard = (currentAttempt) => {
   console.write(`Propose a combination: `);
 }
 
-const getproposedCombination = () => {
-  return console.readString();
-}
-
-const isRepeatSecretCombination = (color, secretCombination) => {
-  if(secretCombination.length === 0) {
-    return false;
-  }
-  for (let i = 0; i < secretCombination.length; i++) {
-    if(secretCombination[i] === color) {
-      return true;
-    }
-  }
-  return false;
-}
-
-const validateProposedCombination = (proposedCombination, COLORS) => {
-  const COMBINATION_LENGTH = 4;
+const validateProposedCombination = (proposedCombination, COLORS, COMBINATION_LENGTH) => {
   let error;
   if(proposedCombination.length !== COMBINATION_LENGTH) {
     error = 'Wrong proposed combination length';
@@ -113,17 +89,36 @@ const getResultProposedCombination = (proposedCombination, secretCombination) =>
   return [blacks + ' blacks', whites + ' whites'];
 }
 
-const isResumen = () => {
-  const answer = console.readString(`Do you want to continue? (y/n): `);
-  return answer == 'y' ? true : false;
-}
-
 const isWinner = (resultProposedCombination) => {
-  const blacks = 0;
-  if(resultProposedCombination[blacks] === '4 blacks') {
+  const indexBlacks = 0;
+  if(resultProposedCombination[indexBlacks] === '4 blacks') {
     return true;
   }
   return false;
+}
+
+const showResult = (error, proposedCombination, resultProposedCombination) => {
+  const indexBlacks = 0;
+  const indexWhites = 1;
+  console.writeln(`${proposedCombination} --> ${resultProposedCombination[indexBlacks]} and ${resultProposedCombination[indexWhites]}`);
+  console.writeln(error);
+}
+
+const isRepeatSecretCombination = (color, secretCombination) => {
+  if(secretCombination.length === 0) {
+    return false;
+  }
+  for (let i = 0; i < secretCombination.length; i++) {
+    if(secretCombination[i] === color) {
+      return true;
+    }
+  }
+  return false;
+}
+
+const isResumen = () => {
+  const answer = console.readString(`Do you want to continue? (y/n): `);
+  return answer == 'y' ? true : false;
 }
 
 const showIsWinnerOrLost = (winner) => {
