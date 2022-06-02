@@ -10,7 +10,6 @@ const playMastermind = () => {
 const playGame = () => {
   const COLORS = ['r','g','b','y','c','m'];
   const secretCombination = getSecretCombination(COLORS);
-  console.writeln(secretCombination); // test
   const maxAttempts = 11;
   let currentAttempt = 0;
   let winner;
